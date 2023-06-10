@@ -1,6 +1,7 @@
 package jd2Homework06;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -107,13 +108,25 @@ public class ProductManager {
 
   public List<Product> getActiveProductsSortedByPrice() {
     // ProductStatus'ü ACTIVE olan ürünleri fiyatlarına göre sıralayıp döndüren metodu yazın
-    return null;
+	  
+	  Predicate<Product> activeProducts = product -> product.getProductStatus().name().equals("ACTIVE") ;
+	  
+	  Comparator<Product> comparator = (product1, product2) -> (int) (product1.getPrice() - product2.getPrice());
+	 
+	  return filterProducts(activeProducts).stream().sorted(comparator).toList();
   }
 
   public double calculateAveragePriceInCategory(String category) {
     // String olarak verilen category'e ait olan ürünlerin fiyatlarının ortalamasını yoksa 0.0 döndüren metodu yazın
     // tip: OptionalDouble kullanımını inceleyin.
-    return 0.0;
+	  
+	  Predicate<Product> categoryProducts = product -> product.getCategory().equals(category);
+	  List<Product> productList=filterProducts(categoryProducts);
+	 
+	  return productList.stream()
+	  .mapToDouble(Product::getPrice)
+      .average()
+      .orElse(0.0);
   }
 
   public Map<String, Double> getCategoryPriceSum() {
@@ -121,7 +134,11 @@ public class ProductManager {
     // döndüren metodu yazın
     // örn:
     // category-1 105.2
-    // category-2 45.0
-    return null;
+    // category-2 45.0	  
+	  
+	  return products.values()
+              .stream()
+              .collect(Collectors.groupingBy(Product::getCategory,
+                      Collectors.summingDouble(product -> product.getStock() * product.getPrice())));  
   }
 }

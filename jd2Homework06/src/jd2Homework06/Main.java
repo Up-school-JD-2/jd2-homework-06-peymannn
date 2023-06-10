@@ -19,6 +19,9 @@ public class Main {
     manager.addProduct(new Product("3", "Product 3", 0, 19.99, "Category 1", ProductStatus.OUT_OF_STOCK));
     manager.addProduct(new Product("4", "Product 4", 3, 24.99, "Category 2", ProductStatus.DISCONTINUED));
 
+    System.out.println("\n\nBefore Oparation Categories Price Sum");
+    System.out.println(manager.getCategoryPriceSum());
+    
     // ORD-122
     manager.registerOrderNumberSupplier("supplier-1", () -> {
       int orderNumber = random.nextInt(1000);
@@ -72,5 +75,16 @@ public class Main {
                 product.getProductStatus()));
     System.out.println("Active products :");
     filteredProducts.forEach(System.out::println);
+    
+    System.out.println("\n\nACTIVE FILTER PRODUCTS");
+    List<Product> activeProducts = manager.getActiveProductsSortedByPrice();
+    activeProducts.forEach(System.out::println);
+    
+    System.out.println("\n\nCalculate Average Pricev In Category");
+    double averagePriceInCategory= manager.calculateAveragePriceInCategory("Category 1");
+    System.out.println("average Price In Category:" + averagePriceInCategory);
+    
+    System.out.println("\n\nAfter some oparation Categories Price Sum");
+    System.out.println(manager.getCategoryPriceSum());
   }
 }
